@@ -11,9 +11,13 @@ class Participant
     hand << card
   end
 
-  def show_hand
-    hand.each do |card|
-      print card.value + card.suit + '  '
+  def show_hand(*one)
+    if one.empty?
+      hand.each do |card|
+        print card.value + card.suit + '  '
+      end
+    else 
+      print hand.last.value + hand.last.suit + ' ' 
     end
   end
 
@@ -29,7 +33,7 @@ class Participant
       end
     end
 
-    hand.select {|e| e == "A"}.count.times do
+    hand.select {|e| e.value == "A"}.count.times do
       total -=10 if total > 21
     end
 
@@ -119,12 +123,21 @@ class Blackjack
     puts ""
     puts "- - - - - - - - - - - - - - - - - - - - - -"
     print "#{@dealer.name} has: "
-    @dealer.show_hand
-    print " with a total of: "
-    emphasize(@dealer.calculate_total)
+    @dealer.show_hand(1)
+    print " and one hidden card."
+    #emphasize(@dealer.calculate_total)
     puts ""
     emphasize("~~~~~~~~~~~~~~~~~~~~~~~~~")
     puts ""
+
+    if @player.calculate_total == '21'
+      emphasize('Blackjack! You won!')
+    end
+
+    if @dealer.calculate_total == '21'
+      emphasize('Blackjack for the Dealer. Sorry, you lose')
+    end
+
   end
 
   def player_round
